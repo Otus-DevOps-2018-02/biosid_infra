@@ -1,3 +1,4 @@
+
 # biosid_infra
 biosid Infra repository
 
@@ -9,7 +10,7 @@ bastion_IP = 35.204.59.98
 someinternalhost_IP = 10.164.0.3
 ```
 > Исследовать способ подключения к **someinternalhost** в одну команду из вашего рабочего устройства, проверить работоспособность найденного решения и внести его в README<span></span>.md в вашем репозитории
-```shell
+```bash
 eval $(ssh-agent)
 ssh-add ~/.ssh/gcp.biosid
 ssh -A -t biosid@35.204.59.98 ssh 10.164.0.3
@@ -39,7 +40,7 @@ Host gcp-someinternalhost
   ProxyCommand ssh -A -t biosid@35.204.59.98 -W %h:%p
 ```
 В результате можно подключаться к **someinternalhost** как:
-```shell
+```bash
 ssh-add ~/.ssh/gcp.biosid
 ssh gcp-someinternalhost
 ```
@@ -58,3 +59,26 @@ testapp_port = 9292
  4. установлено приложение из репозитория [express42/reddit](https://github.com/express42/reddit/tree/monolith). Для быстрой установки создан скрипт `deploy.sh`
 
 Проверка приложения: http://35.189.201.70:9292/
+
+### Дополнительное задание :: startup_script
+Из скриптов `install_ruby.sh`, `install_mongodb.sh` и `deploy.sh` собран скрипт [startup_script.sh](https://gist.githubusercontent.com/biosid/551c4204d09edf00e886e976c2b69e65/raw/df898195796096b5b9ce48c81db8c4fdb744d182/startup_script.sh). Используем его при создании экземпляра виртуальной машины:
+```bash
+gcloud compute instances create reddit-app-2 \
+  --boot-disk-size=10GB \
+  --image-family ubuntu-1604-lts \
+  --image-project=ubuntu-os-cloud \
+  --machine-type=g1-small \
+  --tags puma-server \
+  --restart-on-failure \
+  --metadata startup-script-url=https://gist.githubusercontent.com/biosid/551c4204d09edf00e886e976c2b69e65/raw/df898195796096b5b9ce48c81db8c4fdb744d182/startup_script.sh
+```
+В качестве альтернативы можно хранить этот файл в Storage и обращаться к нему с ключом `--metadata startup-script-url=gs:/startup_script.sh`.
+
+### Дополнительное задание :: firewall
+Ручное создание правила брэндмауера можно заменить командой утилиты `gcloud`:
+```bash
+gcloud compute firewall-rules create default-puma-server \
+  --allow=tcp:9292 \
+  --network=default \
+  --target-tags=puma-server
+```
