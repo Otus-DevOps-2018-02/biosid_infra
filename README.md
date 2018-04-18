@@ -89,11 +89,16 @@ gcloud compute firewall-rules create default-puma-server \
 В конфигурации `ubuntu16.json` изменяeмые данные вынесены в раздел `variables` переменных, значение которых задаётся в файле `variables.json` (см. пример `variables.json.example`). Для их применения необходимо выполнять команду `packer build ubuntu16.json` с дополнительным параметром `-var-file=variables.json`, но можно значения передавать прям в командной строке строке ключом `-var`.
 Так же добавлен *provisioner* для сохранения в теле образа его имени, чтобы после разворачивания экземпляра ВМ из него всегда было понятно, из какого образа он инстанциирован.
 Благодаря созданному таким образом образу создавать виртуальную машину и деплоить на неё приложение reddit можно командой:
-```shell
+```bash
 gcloud compute instances create reddit-app-14 \
   --image-family reddit-base \
   --image-project=otus-infra-199514 \
+  --machine-type=f1-micro \
   --tags puma-server \
   --restart-on-failure \
   --metadata-from-file startup-script=scripts/startup_script.sh
 ```
+
+### Задание со *
+Создана конфигурация `immutable.json`, согласно которой собирается образ с предустановленными Ruby, MongoDb. а так же проинсталлированным приложением Reddit, запускающемся на http-сервере puma в качестве службы посредством `systemd unit`. У данного образа image_family = reddit-full.
+С помощью скрипта `config-scripts/create-reddit-vm.sh` в одну команду (с помощью утилиты `gcloud`) создаётся экземпляр виртуальной машины с запущенным приложением Reddit.
