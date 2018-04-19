@@ -1,0 +1,4 @@
+project = "otus-infra-199514"
+public_key_path = "~/.ssh/rsa.gcp.sologm.pub"
+private_key_path = "~/.ssh/rsa.gcp.sologm"
+disk_image = "reddit-base"
