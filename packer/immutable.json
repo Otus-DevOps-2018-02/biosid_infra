@@ -19,8 +19,7 @@
       "zone": "europe-west1-c",
       "network": "default",
       "ssh_username": "{{user `ssh_user`}}",
-      "machine_type": "{{user `machine_type`}}",
-      "tags": "puma-server"
+      "machine_type": "{{user `machine_type`}}"
     }
   ],
   "provisioners": [
