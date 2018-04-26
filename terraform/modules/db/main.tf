@@ -13,9 +13,8 @@ resource "google_compute_instance" "db" {
 
   # определение сетевого интерфейса
   network_interface {
-    network = "default"
-
-    access_config {}
+    network       = "default"
+    access_config = {}
   }
 
   metadata {
