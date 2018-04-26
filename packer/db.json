@@ -1,0 +1,32 @@
+{
+  "variables": {
+    "project_id": null,
+    "source_image_family": null,
+    "ssh_user": null,
+    "machine_type": "f1-micro",
+    "build_name": "reddit-db-base-{{timestamp}}"
+  },
+  "builders": [
+    {
+      "type": "googlecompute",
+      "project_id": "{{user `project_id`}}",
+      "image_name": "{{user `build_name`}}",
+      "image_family": "reddit-db-base",
+      "image_description": "Base image with pre-installed MongoDb",
+      "source_image_family": "{{user `source_image_family`}}",
+      "disk_size": "10",
+      "disk_type": "pd-standard",
+      "zone": "europe-west1-c",
+      "network": "default",
+      "ssh_username": "{{user `ssh_user`}}",
+      "machine_type": "{{user `machine_type`}}"
+    }
+  ],
+  "provisioners": [
+    {
+      "type": "shell",
+      "script": "scripts/install_mongodb.sh",
+      "execute_command": "sudo {{.Path}}"
+    }
+  ]
+}
