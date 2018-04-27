@@ -4,23 +4,22 @@ provider "google" {
   region  = "${var.region}"
 }
 
-module "storage-bucket" {
+module "storage_bucket" {
   source  = "SweetOps/storage-bucket/google"
   version = "0.1.1"
-  name    = ["bckt-001"]
+  name    = ["bckt-001", "my-bucket-83554"]
 }
 
-output storage-bucket_url {
-  value = "${module.storage-bucket.url}"
+output storage_bucket_url {
+  value = "${module.storage_bucket.url}"
 }
 
-module "storage-bucket-us" {
-  source   = "SweetOps/storage-bucket/google"
-  version  = "0.1.1"
-  name     = ["bckt-002-us", "bckt-003-us"]
-  location = "us-central1"
+module "state_bucket" {
+  source  = "SweetOps/storage-bucket/google"
+  version = "0.1.1"
+  name    = ["tf-state-storage-553"]
 }
 
-output storage-bucket_url_us {
-  value = "${module.storage-bucket-us.url}"
+output tf_state_bucket_url {
+  value = "${module.state_bucket.url}"
 }
