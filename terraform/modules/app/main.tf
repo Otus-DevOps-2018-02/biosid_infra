@@ -1,6 +1,6 @@
 resource "google_compute_instance" "app" {
   name         = "reddit-app"
-  machine_type = "g1-small"
+  machine_type = "${var.machine_type}"
   zone         = "${var.zone}"
   tags         = ["reddit-app"]
 
@@ -13,7 +13,7 @@ resource "google_compute_instance" "app" {
 
   # определение сетевого интерфейса
   network_interface {
-    network = "default"
+    network = "${var.network}"
 
     access_config {
       nat_ip = "${google_compute_address.app_ip.address}"
@@ -30,8 +30,8 @@ resource "google_compute_address" "app_ip" {
 }
 
 resource "google_compute_firewall" "firewall_puma" {
-  name    = "allow-puma-default"
-  network = "default"
+  name    = "allow-puma-${var.network}"
+  network = "${var.network}"
 
   allow {
     protocol = "tcp"

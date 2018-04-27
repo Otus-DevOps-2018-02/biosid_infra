@@ -1,7 +1,7 @@
 resource "google_compute_firewall" "firewall_ssh" {
-  name        = "default-allow-ssh"
-  description = "Allow SSH from anywhere"
-  network     = "default"
+  name        = "${var.network}-allow-ssh"
+  description = "Allow SSH from ip ranges"
+  network     = "${var.network}"
   priority    = 65534
 
   allow {

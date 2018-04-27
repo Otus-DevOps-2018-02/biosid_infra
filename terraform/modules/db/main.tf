@@ -1,6 +1,6 @@
 resource "google_compute_instance" "db" {
   name         = "reddit-db"
-  machine_type = "g1-small"
+  machine_type = "${var.machine_type}"
   zone         = "${var.zone}"
   tags         = ["reddit-db"]
 
@@ -13,7 +13,7 @@ resource "google_compute_instance" "db" {
 
   # определение сетевого интерфейса
   network_interface {
-    network       = "default"
+    network       = "${var.network}"
     access_config = {}
   }
 
@@ -23,8 +23,8 @@ resource "google_compute_instance" "db" {
 }
 
 resource "google_compute_firewall" "firewall_mongo" {
-  name    = "allow-mongo-default"
-  network = "default"
+  name    = "allow-mongo-${var.network}"
+  network = "${var.network}"
 
   allow {
     protocol = "tcp"
