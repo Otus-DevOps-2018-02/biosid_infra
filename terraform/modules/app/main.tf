@@ -21,7 +21,39 @@ resource "google_compute_instance" "app" {
   }
 
   metadata {
-    ssh-keys = "sologm:${file("${var.public_key_path}")}"
+    ssh-keys = "${var.ssh_user}:${file("${var.public_key_path}")}"
+  }
+}
+
+# setup DATABASE_URL from var.mongodb_ip
+data "template_file" "puma_service" {
+  template = "${file("${path.module}/files/puma.service.tpl")}"
+
+  vars {
+    mongodb_ip = "${var.mongodb_ip}"
+  }
+}
+
+resource "null_resource" "deploy_app" {
+  provisioner "remote-exec" {
+    inline = ["sudo gem install bundler"]
+  }
+
+  provisioner "file" {
+    content     = "${data.template_file.puma_service.rendered}"
+    destination = "/tmp/puma.service"
+  }
+
+  provisioner "remote-exec" {
+    script = "${path.module}/files/deploy.sh"
+  }
+
+  connection {
+    type        = "ssh"
+    host        = "${google_compute_address.app_ip.address}"
+    user        = "${var.ssh_user}"
+    agent       = false
+    private_key = "${file("${var.private_key_path}")}"
   }
 }
 

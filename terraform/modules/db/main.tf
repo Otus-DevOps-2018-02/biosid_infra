@@ -22,6 +22,41 @@ resource "google_compute_instance" "db" {
   }
 }
 
+# setup bindIp
+data "template_file" "mongod_conf" {
+  template = "${file("${path.module}/files/mongod.conf.tpl")}"
+
+  vars {
+    bind_ip = "127.0.0.1,${google_compute_instance.db.network_interface.0.address}"
+  }
+}
+
+resource "null_resource" "configure_mongodb" {
+  provisioner "file" {
+    # source      = "${path.module}/files/mongod.conf.tpl"
+    content     = "${data.template_file.mongod_conf.rendered}"
+    destination = "/tmp/mongod.conf"
+  }
+
+  # provisioner "remote-exec" {
+  #   inline = ["sudo sed -i 's/$${bind_ip}/127.0.0.1,${google_compute_instance.db.network_interface.0.address}/g' /etc/mongod.conf && sudo systemctl restart mongod"]
+  # }
+
+  provisioner "remote-exec" {
+    inline = [
+      "sudo mv /tmp/mongod.conf /etc/mongod.conf",
+      "sudo systemctl restart mongod",
+    ]
+  }
+  connection {
+    type        = "ssh"
+    host        = "${google_compute_instance.db.network_interface.0.access_config.0.assigned_nat_ip}"
+    user        = "${var.ssh_user}"
+    agent       = false
+    private_key = "${file("${var.private_key_path}")}"
+  }
+}
+
 resource "google_compute_firewall" "firewall_mongo" {
   name    = "allow-mongo-${var.network}"
   network = "${var.network}"

@@ -12,6 +12,10 @@ variable zone {
   default     = "europe-west1-d"
 }
 
+variable ssh_user {
+  description = "User name used fro ssh"
+}
+
 variable public_key_path {
   description = "Path to public key used for ssh"
 }
