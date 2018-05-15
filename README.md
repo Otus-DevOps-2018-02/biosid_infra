@@ -148,3 +148,20 @@ ansible db -m service -a name=mongod
 ansible app -m git -a 'repo=https://github.com/express42/reddit.git dest=/home/sologm/reddit'
 ansible-playbook clone.yml
 ```
+
+### Задание со *
+Изучен и реализован динамический inventory.
+```bash
+# inventory, прочитанный из файла **inventory.json**
+ansible all -m ping -i json_inventory.sh
+
+# совсем динамический inventory
+ansible db -m ping -i gce_inventory.sh
+```
+> По какой-то причине в обоих случаях в консоль пишется
+> ```
+> [ERROR]:
+> ```
+
+Более динамический есть только [gce.py](https://github.com/ansible/ansible/blob/devel/contrib/inventory/gce.py) :)
+При желании параметр `-i gce_inventory.sh` можно унести в `ansible.cfg`
