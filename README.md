@@ -137,3 +137,14 @@ cd terraform/stage && terraform init && terraform apply
 ### Задание со *
 Модуль app (создание сервера приожения) расширен provisioner-ами для деплоя на него приложения Reddit. Т.к. теперь сервер БД размещён на другом хосте, то приложению (службе) указан DATABASE_URL с приватным адресом сервера БД.
 Модуль db (создание сервера баз данных) расширен provisioner-ами для настройки MongoDb, чтобы он слушал не только 127.0.0.1, но и приватный адрес виртуалки - задаётся [net]bindIp в mongod.conf. В противном случае приложение не может подключиться к БД.
+
+## Homework-9 :: Ansible-1
+Описана базовая конфигурация `ansible` для выполнения команд на серверах, созданных с помощью `cd terraform/stage && terraform init && terraform apply`.
+Примеры команд:
+```bash
+ansible all -m ping -i inventory.yml
+ansible app -m shell -a 'ruby -v; bundler -v'
+ansible db -m service -a name=mongod
+ansible app -m git -a 'repo=https://github.com/express42/reddit.git dest=/home/sologm/reddit'
+ansible-playbook clone.yml
+```
