@@ -35,6 +35,8 @@ data "template_file" "puma_service" {
 }
 
 resource "null_resource" "deploy_app" {
+  count = "${var.should_deploy_app ? 1 : 0}"
+
   provisioner "remote-exec" {
     inline = ["sudo gem install bundler"]
   }

@@ -27,6 +27,11 @@ variable network {
   description = "Network name"
 }
 
+variable should_deploy_app {
+  description = "Should application to be deployed on server or not"
+  default     = "true"
+}
+
 variable mongodb_ip {
   description = "MongoDb server IP"
   default     = "127.0.0.1"

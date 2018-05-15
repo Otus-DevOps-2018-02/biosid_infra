@@ -43,3 +43,8 @@ variable network {
   description = "Network name"
   default     = "default"
 }
+
+variable should_deploy_app {
+  description = "Should application to be deployed on server or not"
+  default     = "true"
+}
