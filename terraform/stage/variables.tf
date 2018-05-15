@@ -48,3 +48,8 @@ variable should_deploy_app {
   description = "Should application to be deployed on server or not"
   default     = "true"
 }
+
+variable should_configure_db {
+  description = "Should configure MongoDb server or not"
+  default     = "true"
+}
