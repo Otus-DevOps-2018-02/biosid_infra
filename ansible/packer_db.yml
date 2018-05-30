@@ -1,0 +1,30 @@
+---
+- name: Install MongoDb
+  hosts: db
+  become: true
+  vars:
+    home_dir: /home/sologm
+    timestamp: "{{ ansible_date_time.epoch }}"
+    build_name: "{{ build_name }}"
+  tasks:
+  - name: Add APT key
+    apt_key:
+      keyserver: keyserver.ubuntu.com
+      id: EA312927
+  - name: Add APT repository
+    apt_repository:
+      repo: deb http://repo.mongodb.org/apt/ubuntu xenial/mongodb-org/3.2 multiverse
+      filename: /etc/apt/sources.list.d/mongodb-org-3.2.list
+  - name: Install MongoDb
+    apt:
+      name: mongodb-org
+      update_cache: yes
+  - name: Configure mongod service
+    systemd:
+      name: mongod
+      enabled: yes
+  - name: Write image version
+    copy:
+      content: "{{ timestamp }} :: {{ build_name }}"
+      dest: "{{ home_dir }}/.imageid"
+      force: no
