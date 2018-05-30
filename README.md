@@ -165,3 +165,18 @@ ansible db -m ping -i gce_inventory.sh
 
 Более динамический есть только [gce.py](https://github.com/ansible/ansible/blob/devel/contrib/inventory/gce.py) :)
 При желании параметр `-i gce_inventory.sh` можно унести в `ansible.cfg`
+
+## Homework-10 :: Ansible-2
+Настройка серверов выполняется с помощью ansible-плейбуков. Все сценарии разделены на раздельные плейбуки `app.yml`, `db.yml`, `deploy.yml` и побъединены в единый плейбук `site.yml`. Теперь конфигурация сервисов и установка приложений выполняется в одну команду:
+```bash
+ansible-playbook site.yml
+```
+Так же `ansible`-плейбуки использованы взамен `shell`-команд для настройки базовых образов с помощью `packer`. Зампекание образов теперь выполняется из корня репозитория:
+```bash
+packer build -var-file=packer/variables.json packer/app.json
+packer build -var-file=packer/variables.json packer/db.json
+```
+
+### Задание со *
+Случайно было выполнено в предыдущем задании.
+Теперь по умолчанию в `ansible.cfg` используется динамический `inventory = ./gce_inventory.sh`.
