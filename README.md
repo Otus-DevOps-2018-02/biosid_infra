@@ -182,4 +182,10 @@ packer build -var-file=packer/variables.json packer/db.json
 Теперь по умолчанию в `ansible.cfg` используется динамический `inventory = ./gce_inventory.sh`.
 
 ## Homework-11 :: Ansible roles, environments
-С помощью утилиты `ansible-galaxy` удобно созданы шаблоны ролей `app` и `db`, в них перенесены задачи и обработчики из `app.yml` и `db.yml` соответсвенно. Теперь модули можно будет переиспользовать, например, для разных окружений `stage` и `prod`.
+С помощью утилиты `ansible-galaxy` удобно созданы шаблоны ролей `app` и `db`, в них перенесены задачи и обработчики из `app.yml` и `db.yml` соответсвенно. Теперь модули можно будет переиспользовать, например, для разных окружений `stage` и `prod`, перечисленных в папке `environments`.
+При такой структуре настройках хостов будет выполняться командами:
+```bash
+ansible-playbook -i environments/stage/gce_inventory.sh playbooks/site.yml
+ansible-playbook -i environments/prod/inventory playbooks/site.yml
+```
+Первая команда может и не содержать параметр `-i`, т.к. этот inventory указан по умолчанию в `ansible.cfg`.

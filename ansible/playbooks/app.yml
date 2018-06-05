@@ -3,8 +3,5 @@
   hosts: app
   tags: app-tag
   become: true
-  vars:
-    home_dir: /home/sologm
-    db_host: "{{ hostvars['dbserver'].internal_ip }}"
   roles:
     - app

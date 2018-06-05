@@ -1,0 +1,2 @@
+home_dir: /home/sologm
+db_host: "{{ hostvars['dbserver'].internal_ip }}"

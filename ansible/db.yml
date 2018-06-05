@@ -1,8 +1,0 @@
----
-- name: Configure MongoDb
-  hosts: db
-  become: true
-  vars:
-    mongo_bind_ip: "127.0.0.1,{{ hostvars['dbserver'].internal_ip }}"
-  roles:
-    - db
