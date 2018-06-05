@@ -4,4 +4,5 @@
   tags: app-tag
   become: true
   roles:
+    - jdauphant.nginx
     - app
