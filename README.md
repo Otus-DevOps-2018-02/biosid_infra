@@ -189,3 +189,5 @@ ansible-playbook -i environments/stage/gce_inventory.sh playbooks/site.yml
 ansible-playbook -i environments/prod/inventory playbooks/site.yml
 ```
 Первая команда может и не содержать параметр `-i`, т.к. этот inventory указан по умолчанию в `ansible.cfg`.
+Кстати, первая команда использует `dynamic inventory`!
+С помощью утилиты `ansible-vault` были закодированы файлы `credentials.yml` в обоих окружениях. В них сохранены логины и пароли пользователей, создаваемых при настройке хостов согласно `users.yml`.
