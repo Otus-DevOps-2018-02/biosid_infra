@@ -1,5 +1,6 @@
 
 # biosid_infra
+[![Build Status](https://travis-ci.org/Otus-DevOps-2018-02/biosid_infra.svg?branch=ansible-3)](https://travis-ci.org/Otus-DevOps-2018-02/biosid_infra)
 biosid Infra repository
 
 ## Homework-4 :: Бастион
