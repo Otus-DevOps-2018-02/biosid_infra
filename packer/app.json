@@ -24,16 +24,10 @@
   ],
   "provisioners": [
     {
-      "type": "shell",
-      "script": "scripts/install_ruby.sh",
-      "execute_command": "sudo {{.Path}}"
-    },
-    {
-      "type": "shell",
-      "inline": [
-        "echo \"writing image id '{{user `build_name`}}' to $(pwd)/.imageid\"",
-        "sudo echo \"{{timestamp}} :: {{user `build_name`}}\" > ~/.imageid"
-      ]
+      "type": "ansible",
+      "playbook_file": "./ansible/packer_app.yml",
+      "groups": "app",
+      "extra_arguments": [ "--extra-vars", "build_name={{user `build_name`}}" ]
     }
   ]
 }

@@ -32,6 +32,8 @@ data "template_file" "mongod_conf" {
 }
 
 resource "null_resource" "configure_mongodb" {
+  count = "${var.should_configure_db ? 1 : 0}"
+
   provisioner "file" {
     # source      = "${path.module}/files/mongod.conf.tpl"
     content     = "${data.template_file.mongod_conf.rendered}"

@@ -1,0 +1,20 @@
+---
+- name: Install Ruby & Bundler
+  hosts: app
+  become: true
+  vars:
+    home_dir: /home/sologm
+    timestamp: "{{ ansible_date_time.epoch }}"
+    build_name: "{{ build_name }}"
+  tasks:
+  - name: Install ruby, gems and packages
+    apt: "name={{ item }} state=present"
+    with_items:
+      - ruby-full
+      - ruby-bundler
+      - build-essential
+  - name: Write image version
+    copy:
+      content: "{{ timestamp }} :: {{ build_name }}"
+      dest: "{{ home_dir }}/.imageid"
+      force: no

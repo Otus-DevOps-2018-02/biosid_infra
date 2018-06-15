@@ -26,3 +26,8 @@ variable machine_type {
 variable network {
   description = "Network name"
 }
+
+variable should_configure_db {
+  description = "Should configure MongoDb server or not"
+  default     = "true"
+}
