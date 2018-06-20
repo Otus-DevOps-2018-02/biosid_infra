@@ -1,0 +1,6 @@
+---
+# defaults file for app
+
+home_dir: /home/sologm
+db_host: 127.0.0.1
+env: local

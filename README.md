@@ -1,5 +1,6 @@
 
 # biosid_infra
+[![Build Status](https://travis-ci.org/Otus-DevOps-2018-02/biosid_infra.svg?branch=ansible-3)](https://travis-ci.org/Otus-DevOps-2018-02/biosid_infra)
 biosid Infra repository
 
 ## Homework-4 :: Бастион
@@ -138,7 +139,7 @@ cd terraform/stage && terraform init && terraform apply
 Модуль app (создание сервера приожения) расширен provisioner-ами для деплоя на него приложения Reddit. Т.к. теперь сервер БД размещён на другом хосте, то приложению (службе) указан DATABASE_URL с приватным адресом сервера БД.
 Модуль db (создание сервера баз данных) расширен provisioner-ами для настройки MongoDb, чтобы он слушал не только 127.0.0.1, но и приватный адрес виртуалки - задаётся [net]bindIp в mongod.conf. В противном случае приложение не может подключиться к БД.
 
-## Homework-9 :: Ansible-1
+## Homework-9 :: Ansible base configuration
 Описана базовая конфигурация `ansible` для выполнения команд на серверах, созданных с помощью `cd terraform/stage && terraform init && terraform apply`.
 Примеры команд:
 ```bash
@@ -166,7 +167,7 @@ ansible db -m ping -i gce_inventory.sh
 Более динамический есть только [gce.py](https://github.com/ansible/ansible/blob/devel/contrib/inventory/gce.py) :)
 При желании параметр `-i gce_inventory.sh` можно унести в `ansible.cfg`
 
-## Homework-10 :: Ansible-2
+## Homework-10 :: Ansible playbooks
 Настройка серверов выполняется с помощью ansible-плейбуков. Все сценарии разделены на раздельные плейбуки `app.yml`, `db.yml`, `deploy.yml` и побъединены в единый плейбук `site.yml`. Теперь конфигурация сервисов и установка приложений выполняется в одну команду:
 ```bash
 ansible-playbook site.yml
@@ -180,3 +181,14 @@ packer build -var-file=packer/variables.json packer/db.json
 ### Задание со *
 Случайно было выполнено в предыдущем задании.
 Теперь по умолчанию в `ansible.cfg` используется динамический `inventory = ./gce_inventory.sh`.
+
+## Homework-11 :: Ansible roles, environments
+С помощью утилиты `ansible-galaxy` удобно созданы шаблоны ролей `app` и `db`, в них перенесены задачи и обработчики из `app.yml` и `db.yml` соответсвенно. Теперь модули можно будет переиспользовать, например, для разных окружений `stage` и `prod`, перечисленных в папке `environments`.
+При такой структуре настройках хостов будет выполняться командами:
+```bash
+ansible-playbook -i environments/stage/gce_inventory.sh playbooks/site.yml
+ansible-playbook -i environments/prod/inventory playbooks/site.yml
+```
+Первая команда может и не содержать параметр `-i`, т.к. этот inventory указан по умолчанию в `ansible.cfg`.
+Кстати, первая команда использует `dynamic inventory`!
+С помощью утилиты `ansible-vault` были закодированы файлы `credentials.yml` в обоих окружениях. В них сохранены логины и пароли пользователей, создаваемых при настройке хостов согласно `users.yml`.
